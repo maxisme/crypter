@@ -163,7 +163,7 @@ var thisToDecrypt, thisChat;
 var tag = "--crypter.co.uk--"
 
 //-------------- GET DECRYPT BUTTONS ---------
-//this function depends on; the class ._5yl5 being the parent(x2) class of every message, .fbNubFlyoutInner is a parent class of both the crypter button
+//this function depends on; the class ._5yl5 being the parent(x2) class of every message and .fbNubFlyoutInner is a parent class of both the crypter button
 function setDecryptButton(){
 	var html = $("body").html();
 	var pnters = getIndicesOf(tag, html);
@@ -224,7 +224,7 @@ function setDecryptButton(){
 
 //----- pop up setup --------------
 $("body").append('<div align="center" id="popup" style="width: 500px; display: none;"></div>');
-$("#popup").html('<h1 style="font-size:20px;">ENTER A SESSION PASSWORD</h1><h2>For your chat with <span id="fbChatName"></span></h2><span style="font-weight:normal"><br><form autocomplete="off"><input style="display:none"><input type="password" style="display:none"><input autocomplete="off" id="pass1" style="outline:none; text-align: center; border:1px solid #000" type="password"/><br><br><label><input id="check13" type="checkbox"><span style="font-size:12px;font-weight:normal">Auto-Encrypt</span></label><br><label><input id="check12" type="checkbox" checked><span style="font-size:12px;font-weight:normal">Auto-Decrypt</span></label><br><br></form><button id="sub1">Set</button><br><br><span style="cursor:pointer;" id="showExtra"><a target="_blank" href="https://crypter.co.uk">crypter.co.uk</a> | <a target="_blank" href="http://⊗.cf?frm=crypter">⊗.cf</a></span></span>');
+$("#popup").html('<h1 style="font-size:20px;">ENTER A SESSION PASSWORD</h1><h2>For your chat with <span id="fbChatName"></span></h2><span style="font-weight:normal"><br><form autocomplete="off"><input style="display:none"><input type="password" style="display:none"><input autocomplete="off" id="pass1" style="outline:none; text-align: center; border:1px solid #000" type="password"/><br><br><label><input id="check13" type="checkbox"><span style="font-size:12px;font-weight:normal">Auto-Encrypt</span></label><br><label><input id="check12" type="checkbox" checked><span style="font-size:12px;font-weight:normal">Auto-Decrypt</span></label><br><br></form><button id="sub1">Set</button><br><br><span style="cursor:pointer;" id="showExtra"><a target="_blank" href="https://crypter.co.uk">crypter.co.uk</a> | <a target="_blank" href="http://⊗.cf?crypter">⊗.cf</a></span></span>');
 var bb = $('#popup').blurbox({
 	blur: 0,  
 	animateBlur: true, 
