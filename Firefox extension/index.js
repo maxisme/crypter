@@ -1,0 +1,1 @@
+/Users/maxmitch/Documents/Facebook Chat Encrypter/Firefox Extension/index.js
