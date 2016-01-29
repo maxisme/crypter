@@ -2,9 +2,9 @@
 This extension locally encrypts and decrypts your Facebook messages using AES encryption along with a preset password. 
 -----
 
-Crypter (crypter.co.uk) is an extension for Google Chrome and Mozilla Firefox. It allows users to send encrypted messages using the well-established messaging service Facebook messenger. It was designed and created by University of Sussex Computer Science student Max Mitchell (max@maxis.me).
+Crypter ([crypter.co.uk](https://crypter.co.uk)) is an extension for Google Chrome and Mozilla Firefox. It allows users to send encrypted messages using the well-established messaging service Facebook messenger. It was designed and created by University of Sussex Computer Science student Max Mitchell (max@maxis.me).
 
-It works by first agreeing upon a password between the sender and receiver (we recommend using our online self destructing messaging service ⊗.cf). This password is then used to locally encrypt messages on the sender side, creates ciphered text, which is sent across the Facebook server, and is then used again to locally decrypt the ciphered text on the receivers’ side. It is powered by the Crypto-JS library using AES (Advanced Encryption Standard) encryption methods.
+It works by first agreeing upon a password between the sender and receiver (we recommend using our online self destructing messaging service [⊗.cf](http://⊗.cf)). This password is then used to locally encrypt messages on the sender side, creates ciphered text, which is sent across the Facebook server, and is then used again to locally decrypt the ciphered text on the receivers’ side. It is powered by the Crypto-JS library using AES (Advanced Encryption Standard) encryption methods.
 
 Unencrypted conversations leave people’s private conversations vulnerable to interception from private companies and Governments without user consent. This is a growing concern with laws such as the ‘Snooper’s Charter’ being introduced in the UK and SOPA and PIPA in the US. These would allow our Governments’ to intercept our private messages without the need of a warrant from law enforcement or consent from the users.
 
