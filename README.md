@@ -1,4 +1,4 @@
-# [Crypter](https://crypter.co.uk)
+# Crypter
 This extension locally encrypts and decrypts your Facebook messages using AES encryption along with a preset password. 
 -----
 
