@@ -1,1 +1,2 @@
-/Users/maxmitch/Documents/Facebook Chat Encrypter/Firefox Extension/README.md
+#Facebook Chat Encrypter
+A native encryption tool for Facebook messenger.
