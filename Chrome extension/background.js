@@ -273,29 +273,37 @@ $(document).ready(function() {
 		setLockOnChat();
 		setDecryptButton();	
 	},1000);
-	var fubAmmount = $(".fbNubFlyoutTitlebar").length; //number of message chats
 	
-	//NEEDS TO BE RE-WRITTEN - VERY BAD FUNCTION
-	$('.fbNubGroup').bind('DOMNodeInserted DOMNodeRemoved', function(event){
-		setTimeout(function(){
-			if($(".fbNubFlyoutTitlebar").length != fubAmmount){
-				fubAmmount = $(".fbNubFlyoutTitlebar").length;
-				setLockOnChat();
-			}
-		}, 50);
-		
-		setTimeout(function(){
-			var text = event.target.innerText || event.target.textContent;
-			if(text.indexOf(tag) != -1){
-				//get string between two tags -> encrypted message
-				var subStr = text.match(tag+"(.*)"+tag);
-				var hash = subStr[1];
-				if (subStr[1].length >= 42){ //~ min length of encrypted message
-					setDecryptButton();
+	var fubAmmount = $(".fbNubFlyoutTitlebar").length; //number of message chats
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			setTimeout(function(){
+				if($(".fbNubFlyoutTitlebar").length != fubAmmount){
+					fubAmmount = $(".fbNubFlyoutTitlebar").length;
+					setLockOnChat();
 				}
-			}
-		}, 50);
+			}, 50);
+			
+			setTimeout(function(){
+				var text = mutation.target.innerText || mutation.target.textContent;
+				if(text.indexOf(tag) != -1){
+					//get string between two tags -> encrypted message
+					var subStr = text.match(tag+"(.*)"+tag);
+					var hash = subStr[1];
+					if (subStr[1].length >= 42){ //~ min length of encrypted message
+						setDecryptButton();
+					}
+				}
+			}, 50);
+		});
 	});
+	observer.observe(document.querySelector(".fbNubGroup"), {
+		childList: true,
+		subtree: true,
+		attributes: false,
+		characterData: false,
+	});
+
 });
 
 $( document ).on( 'click', '.decrypt', function(){
