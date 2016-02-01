@@ -289,7 +289,7 @@ $(document).ready(function() {
 					fubAmmount = $(".fbNubFlyoutTitlebar").length;
 					setLockOnChat();
 				}
-			}, 50);
+			}, 100);
 			
 			setTimeout(function(){
 				var text = mutation.target.innerText || mutation.target.textContent;
@@ -301,7 +301,7 @@ $(document).ready(function() {
 						setDecryptButton();
 					}
 				}
-			}, 50);
+			}, 150);
 		});
 	});
 	observer.observe(document.querySelector(".fbNubGroup"), {

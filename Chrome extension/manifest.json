@@ -4,9 +4,9 @@
   "name": "Facebook Chat Encrypter",
   "short_name": "Facebook Encrypter",
   "description": "A native encryption tool for Facebook messenger.",
-  "version": "3.1.4.1112",
+  "version": "3.1.4.1113",
   "icons": { "128": "logo.png" },
-  "version_name": "1.08 beta",
+  "version_name": "1.09 beta",
    "content_scripts": [ {
     "js": [ "jquery.min.js", "aes.js", "blurbox.js", "background.js" ],
     "matches": [ "https://www.facebook.com/*"]
