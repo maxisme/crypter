@@ -247,8 +247,7 @@ function setDecryptButton(){
 	});
 }
 
-//--iframe popup
-$("body").append('<iframe style="position:absolute;" src="https://crypter.co.uk/input.php"></iframe>');
+//--iframe popup --> future addition
 
 //----- pop up setup --------------
 $("body").append('<div align="center" id="popup" style="width: 500px; display: none;"></div>');
