@@ -3,6 +3,15 @@ Crypter
 crypter.co.uk
 © 2016 by Maximilian Mitchell. All rights reserved.
 */
+var currentVersion = "1.0";
+
+//get actual version from url
+var actualVersion;
+$.get( "https://crypter.co.uk/version.php", function( data ) {
+	console.log(data);
+	actualVersion = data;
+});
+
 function preloadimages(arr){
     var newimages=[]
     var arr=(typeof arr!="object")? [arr] : arr
@@ -57,28 +66,43 @@ function showPopUp(it){
 	
 	//sets who the user is chatting to
 	$("#fbChatName").html(getFbChatName(it));
+	
+	//set version status
+	if(actualVersion){
+		if(actualVersion != currentVersion){
+			$("#circleID").html('<span class="theCircle" style="position:relative;top:4px;cursor:pointer;display: block; border-radius: 50%; height:8px; width:8px; background-color:transparent; border: 1px solid #bc2122;" id="statusCircle">&nbsp;</span>');
+		}else{
+			$("#circleID").html('<span class="theCircle" style="position:relative;top:4px;cursor:pointer;display: block; border-radius: 50%; height:8px; width:8px; background-color:transparent; border: 1px solid #21bc6e;" id="statusCircle">&nbsp;</span>');
+		}
+	}
+	
+	bb.autosize();
 }
 
 //called when user submits the settings in the pop up menu
 function setSub(){
-	if(!thisChat){
+	if(!thisCrypter){
 		alert("Error #1 please contact info@crypter.co.uk with instructions of what you did before receiving this alert.");
 	}
 	if($("#pass1").val().length > 0){
+		var focusCrypter = thisCrypter;
+		
 		//set password 
-		thisChat.attr("fb_t", CryptoJS.AES.encrypt($("#pass1").val(),""));
+		thisCrypter.attr("fb_t", CryptoJS.AES.encrypt($("#pass1").val(),""));
 		
 		//set checkboxes
 		if($("#check12").is(":checked")){
-			thisChat.attr("fb_de","1");
+			thisCrypter.attr("fb_de","1");
 		}else{
-			thisChat.attr("fb_de","0");
+			thisCrypter.attr("fb_de","0");
 		}
 		if($("#check13").is(":checked")){
-			thisChat.attr("fb_en","1");
+			thisCrypter.attr("fb_en","1");
 		}else{
-			thisChat.attr("fb_en","0");
+			thisCrypter.attr("fb_en","0");
 		}
+		
+		thisCrypter = null;
 		
 		//decrypt all icons after set
 		if(thisToDecrypt != null){
@@ -91,12 +115,12 @@ function setSub(){
 				$(this).click();
 			});
 		}
+		
 		//remove password from input
 		$("#pass1").val("");
 		bb.hide();
 		
-		//focus on chat textarea
-		thisChat.closest( ".fbNubFlyoutFooter" ).find("textarea").focus();
+		focusCrypter.parents( ".fbNubFlyoutInner" ).find("._5rpu").focus();
 	}else{
 		alert("Please set a password.");
 	}
@@ -151,15 +175,16 @@ function setLockOnChat(){
 		  var html = $(this).parent("span").html();
 		  if(html){
 			  if (html.indexOf('Add Photos') >= 0 && $(this).parent("span").parent("div").parent("div").html().indexOf("crypter") == -1){
-				  var textarea = $(this).closest( ".fbNubFlyoutFooter" ).find("textarea");
+				  var textarea = $(this).closest( ".fbNubFlyoutFooter" ).find("._5rpu");
 				  textarea.addClass("textA");
-				  $(this).parent("span").after('<span style="cursor:pointer;display:table;" class="_552o"><img style="vertical-align:middle;display:table-cell;padding-top: 4px;" class="crypter" src="https://crypter.co.uk/icons/lock_empty.png" height ="15px" /></span>');
+				  $(this).parent("span").after('<span style="cursor:pointer;display:table;" class="_552o"><img style="cursor:pointer;vertical-align:middle;display:table-cell;padding-top: 4px;" class="crypter" src="https://crypter.co.uk/icons/lock_empty.png" height ="15px" /></span>');
 			  }
 		  }
 	  });
 }
 
-var thisToDecrypt, thisChat;
+var thisToDecrypt;
+var thisCrypter;
 var tag = "--crypter.co.uk--"
 
 //-------------- GET DECRYPT BUTTONS ---------
@@ -222,15 +247,24 @@ function setDecryptButton(){
 	});
 }
 
+//--iframe popup
+$("body").append('<iframe style="position:absolute;" src="https://crypter.co.uk/input.php"></iframe>');
+
 //----- pop up setup --------------
 $("body").append('<div align="center" id="popup" style="width: 500px; display: none;"></div>');
+
+var reviewLink;
 if(navigator.userAgent.indexOf("Firefox") != -1 ) {
-	//changes review link
-	$("#popup").html('<h1 style="font-size:20px;">ENTER A SESSION PASSWORD</h1><h2>For your chat with <span id="fbChatName"></span></h2><span style="font-weight:normal"><br><form autocomplete="off"><input style="display:none"><input type="password" style="display:none"><input autocomplete="off" id="pass1" style="outline:none; text-align: center; border:1px solid #000" type="password"/><br><br><label><input id="check13" type="checkbox"><span style="font-size:12px;font-weight:normal">Auto-Encrypt</span></label><br><label><input id="check12" type="checkbox" checked><span style="font-size:12px;font-weight:normal">Auto-Decrypt</span></label><br><br></form><button id="sub1">Set</button><br><br><span style="cursor:pointer;" id="showExtra"><a target="_blank" href="https://crypter.co.uk">crypter.co.uk</a> | <a target="_blank" href="http://⊗.cf?crypter">⊗.cf</a> | <a id=\'reviewUs\' style="color:#bc2122" target=\'_blank\' href=\'https://addons.mozilla.org/en-US/firefox/addon/facebook-chat-encrypter/reviews/add\'>review</a></span></span>');
+	//firefox
+	reviewLink = "https://addons.mozilla.org/en-US/firefox/addon/facebook-chat-encrypter/reviews/add";
 }else{
-	//changes review link
-	$("#popup").html('<h1 style="font-size:20px;">ENTER A SESSION PASSWORD</h1><h2>For your chat with <span id="fbChatName"></span></h2><span style="font-weight:normal"><br><form autocomplete="off"><input style="display:none"><input type="password" style="display:none"><input autocomplete="off" id="pass1" style="outline:none; text-align: center; border:1px solid #000" type="password"/><br><br><label><input id="check13" type="checkbox"><span style="font-size:12px;font-weight:normal">Auto-Encrypt</span></label><br><label><input id="check12" type="checkbox" checked><span style="font-size:12px;font-weight:normal">Auto-Decrypt</span></label><br><br></form><button id="sub1">Set</button><br><br><span style="cursor:pointer;" id="showExtra"><a target="_blank" href="https://crypter.co.uk">crypter.co.uk</a> | <a target="_blank" href="http://⊗.cf?crypter">⊗.cf</a> | <a id=\'reviewUs\' style="color:#bc2122" target=\'_blank\' href=\'https://chrome.google.com/webstore/detail/facebook-chat-encrypter/pinmkidoanlggfdghggiabinldfblgfe/reviews\'>review</a></span></span>');
+	//chrome
+	reviewLink = "https://chrome.google.com/webstore/detail/facebook-chat-encrypter/pinmkidoanlggfdghggiabinldfblgfe/reviews";
 }
+
+
+$("#popup").html('<h1 style="font-size:20px;">ENTER A SESSION PASSWORD</h1><h2>For your chat with <span id="fbChatName"></span></h2><span style="font-weight:normal"><br><form autocomplete="off"><input style="display:none"><input type="password" style="display:none"><input autocomplete="off" id="pass1" style="outline:none; text-align: center; border:1px solid #000" type="password"/><br><br><label><input id="check13" type="checkbox"><span style="font-size:12px;font-weight:normal">Auto-Encrypt</span></label><br><label><input id="check12" type="checkbox" checked><span style="font-size:12px;font-weight:normal">Auto-Decrypt</span></label><br><br></form><button id="sub1">Set</button><br><br><span id="showExtra"><a target="_blank" href="https://crypter.co.uk">crypter.co.uk</a> | <a target="_blank" href="http://⊗.cf?crypter">⊗.cf</a> | <a id=\'reviewUs\' target=\'_blank\' href=\''+reviewLink+'\'>review</a><br><span style=\'cursor:pointer;\' id="circleID"></span></span></span>');
+
 var bb = $('#popup').blurbox({
 	blur: 0,  
 	animateBlur: true, 
@@ -241,28 +275,25 @@ var bb = $('#popup').blurbox({
 
 //change icons when user is typing
 $( document ).on( 'keyup', '.textA', function(e){
-	var message = $(this).val();
+	var message = $(this).text();
+	var crypter = $(this).parents(".fbNubFlyoutInner").find(".crypter");
 	if(getIndicesOf(tag, message).length == 2 && getPass($(this))
 		&& message.substring(0, tag.length) == tag
 		&& message.substring(message.length - tag.length, message.length) == tag){
 			//message is encrypted and formatted
-			if($(this).attr("src") != "https://crypter.co.uk/icons/lock_encrypted.png"){
-				$(this).parent("div").parent("div").find(".crypter").attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
-			}
-	}else if($(this).parents(".fbNubFlyoutInner").find('.crypter').attr("fb_en") == 1 && message.length > 0 && getPass($(this))){
-		//message is on auto encrypt mode
-		if($(this).attr("src") != "https://crypter.co.uk/icons/lock_encrypted.png"){
-			$(this).parent("div").parent("div").find(".crypter").attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
+		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_encrypted.png"){
+			crypter.attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
 		}
+	}else if($(this).parents(".fbNubFlyoutInner").find('.crypter').attr("fb_en") == 1 && message.length > 0 && getPass($(this))){
+			crypter.attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
 	}else if(message.length > 0 && getPass($(this))){
-		//message is not yet encrypted
-		if($(this).attr("src") != "https://crypter.co.uk/icons/lock_should.png"){
-			$(this).parent("div").parent("div").find(".crypter").attr("src","https://crypter.co.uk/icons/lock_should.png");
+		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_should.png"){
+			crypter.attr("src","https://crypter.co.uk/icons/lock_should.png");
 		}
 	}else{
 		//either no password has been set or there is no text in the text area
-		if($(this).attr("src") != "https://crypter.co.uk/icons/lock_empty.png"){
-			$(this).parent("div").parent("div").find(".crypter").attr("src","https://crypter.co.uk/icons/lock_empty.png");
+		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_empty.png"){
+			crypter.attr("src","https://crypter.co.uk/icons/lock_empty.png");
 		}
 	}
 });
@@ -301,16 +332,15 @@ $(document).ready(function() {
 						setDecryptButton();
 					}
 				}
-			}, 150);
+			}, 100);
 		});
 	});
 	observer.observe(document.querySelector(".fbNubGroup"), {
 		childList: true,
 		subtree: true,
-		attributes: false,
-		characterData: false,
+		attributes: true,
+		characterData: true,
 	});
-
 });
 
 $( document ).on( 'click', '.decrypt', function(){
@@ -331,41 +361,45 @@ $( document ).on( 'click', '.decrypt', function(){
 	}else{
 		thisToDecrypt = $(this);
 		//set new password
-		thisChat = $(this).parents(".fbNubFlyoutInner").find('.crypter');
+		thisCrypter = $(this).parents(".fbNubFlyoutInner").find('.crypter');
 		showPopUp($(this));
 	}
 });
 
 $( document ).on( 'click', '.crypter', function(){
 	if(getPass($(this))){
-		var bottomBit = $(this).closest( ".fbNubFlyoutFooter" );
-		var messageContent = bottomBit.find("textarea").val();
+		var bottomBit = $(this).parents(".fbNubFlyoutInner").find(".fbNubFlyoutFooter" );
+		var messageContent = bottomBit.find(".textA").text();
 		if(messageContent.length > 0){
 			if(getIndicesOf(tag, messageContent).length < 2){
 				$(this).attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
 				//encrypt message
 				var encrypt = tag+CryptoJS.AES.encrypt(messageContent, getPass($(this)))+tag;
 				//replace text
-				bottomBit.find("textarea").val(encrypt);
+				console.log(encrypt);
+				var textarea = $(".textA > div > div > span", bottomBit);
+				textarea.html('<span data-text="true">'+encrypt+'</span>');
 				//focus back on textarea
-				bottomBit.find("textarea").focus();	
-				setTimeout(function(){
-					var e = $.Event('keydown', { keyCode: 13 });
-					bottomBit.find("textarea").trigger(e);
-				}, 100);
+				$("._5rpu", bottomBit).focus().sendkeys(' {Backspace}');
+				
+				bb.hide()
+				// Below needed to block plaintext message from being sent.
+				evt.stopPropagation();
+				evt.preventDefault();
+				return false;
 			}else{
 				alert("already encrypted");
-				bottomBit.find("textarea").focus();
+				bottomBit.find("._5rpu").focus();
 			}
 		}else{
 			//set new password
-			thisChat = $(this);
+			thisCrypter = $(this);
 			showPopUp($(this));
 		}
 	}else{
 		thisToDecrypt = $(this);
 		//password not set
-		thisChat = $(this);
+		thisCrypter = $(this);
 		showPopUp($(this));
 	}
 });
@@ -392,6 +426,16 @@ $(document).on({
 	}
 }, ".crypter");
 
+//version status fade 
+$(document).on({
+	mouseenter: function () {
+		$(this).animate({opacity: 0.5}, 200);
+	},
+	mouseleave: function () {
+		$(this).animate({opacity: 1}, 200);
+	}
+}, ".theCircle");
+
 //submitting password form
 $( document ).on( 'click', '#sub1', function(){
 	setSub();
@@ -413,19 +457,58 @@ $( document ).on( 'keypress', '#pass1', function (e) {
 	}
 });
 
+//replace dot with indfo on updating
+$( document ).on( 'click', '#circleID', function (e) {
+	if(actualVersion != currentVersion){
+		if(navigator.userAgent.indexOf("Firefox") != -1 ) {
+			$("#circleID").replaceWith('<span id="circleID"><div>_</div><span style="color:#bc2122"><strong>Crypter is not up to date!</strong></span><li>Go to: <strong>about:addons</strong></li><li>Click on the <i>gear</i> icon</li><li>Click <i>Check for Updates</i></li></span>');
+			$("#circleID").replaceWith('<span id="circleID"><div>_</div><span style="color:#bc2122">Crypter is not up to date!</span><br>Go to <strong>about:addons</strong> then <i>click</i> the <strong>gear icon</strong> and <i>click</i> <strong>"Check for Updates"</strong></span>');
+		}else{
+			$("#circleID").replaceWith('<span id="circleID"><div>_</div><span style="color:#bc2122">Crypter is not up to date!</span><br>Go to <strong>chrome://extensions</strong> then <i>check</i> <strong>"Developer mode"</strong> and <i>click</i> <strong>"Update extensions now"</strong></span>');
+		}
+	}
+	bb.autosize();
+});
+var entered = false;
 document.addEventListener('keydown', function(evt){
-	var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+	var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	//console.log($(node).text());
 	if(evt.keyCode == 13 
 		&& $(node).parents(".fbNubFlyoutInner").find('.crypter').attr("fb_en") == 1
 		&& $(node).hasClass('textA')){
-			var val = evt.target.value;
+			var val = $(node).text();
+			//console.log(val);
+			console.log(val);
 			if(!(getIndicesOf(tag, val).length == 2
 				&& val.substring(0, tag.length) == tag
 				&& val.substring(val.length - tag.length, val.length) == tag) && val.length > 0){
+					entered = true;
 					var encrypted = tag+CryptoJS.AES.encrypt(val, getPass($(node)))+tag;
-					var target = evt.target || evt.srcElement;
-					target.value = encrypted;
+					var bottomBit = $(node).parents(".fbNubFlyoutInner");
+					var textarea = $(".textA > div > div > span", bottomBit);
+					textarea.html('<span data-text="true">'+encrypted+'</span>');
+					//focus back on textarea
+					$("._5rpu", bottomBit).focus().sendkeys(' {Backspace}');
+					// TO DO: simulate pressing Enter to automatically send the message
+					
+					// Below needed to block plaintext message from being sent.
+					evt.stopPropagation();
+					evt.preventDefault();
+					return false;
 			}
 	}
 }, true);
 
+document.addEventListener('keyup', function(evt){
+	var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	if(entered){
+		console.log("pressend enter");
+		var bottomBit = $(node).parents(".fbNubFlyoutInner");
+		entered = false;
+		//$("._5rpu", bottomBit).focus().trigger(jQuery.Event('keypress', {which: 13}));
+		//$("._5rpu", bottomBit).focus().sendkeys('{enter}{enter}');
+		evt.stopPropagation();
+		evt.preventDefault();
+		return false;
+	}
+},true);
