@@ -12,15 +12,17 @@ $.get( "https://crypter.co.uk/version.php", function( data ) {
 	actualVersion = data;
 });
 
-function preloadimages(arr){
-    var newimages=[]
-    var arr=(typeof arr!="object")? [arr] : arr
-    for (var i=0; i<arr.length; i++){
-        newimages[i]=new Image()
-        newimages[i].src=arr[i]
-    }
+// Icons
+function getIcon(name) {
+	return chrome.extension.getURL('images/' + name + '.png');
 }
-preloadimages(['https://crypter.co.uk/icons/lock_empty.png', 'https://crypter.co.uk/icons/lock_should.png','https://crypter.co.uk/icons/lock_encrypted.png','https://crypter.co.uk/icons/lock_open.png']);
+var icon = {
+	lock_empty: getIcon('lock_empty'),
+	lock_encrypted: getIcon('lock_encrypted'),
+	lock_open: getIcon('lock_open'),
+	lock_should: getIcon('lock_should'),
+	lock_should_black: getIcon('lock_should_black')
+};
 
 function getIndicesOf(searchStr, str) {
 	//counts how many times searchStr occurs in str
@@ -177,7 +179,7 @@ function setLockOnChat(){
 			  if (html.indexOf('Add Photos') >= 0 && $(this).parent("span").parent("div").parent("div").html().indexOf("crypter") == -1){
 				  var textarea = $(this).closest( ".fbNubFlyoutFooter" ).find("._5rpu");
 				  textarea.addClass("textA");
-				  $(this).parent("span").after('<span style="cursor:pointer;display:table;" class="_552o"><img style="cursor:pointer;vertical-align:middle;display:table-cell;padding-top: 4px;" class="crypter" src="https://crypter.co.uk/icons/lock_empty.png" height ="15px" /></span>');
+				  $(this).parent("span").after('<span style="cursor:pointer;display:table;" class="_552o"><img style="cursor:pointer;vertical-align:middle;display:table-cell;padding-top: 4px;" class="crypter" src="' + icon.lock_empty + '" height ="15px" /></span>');
 			  }
 		  }
 	  });
@@ -240,7 +242,7 @@ function setDecryptButton(){
 				
 				if(hasdecrypted == false){
 					//set black padlock for message
-					span.html("<a id='"+crypt+"' class='decrypt'><img style='position:relative; top: 3px;' src='https://crypter.co.uk/icons/lock_should_black.png' height='15px' /></a>");
+					span.html('<a id="' + crypt + '" class="decrypt"><img style="position:relative; top: 3px;" src="' + icon.lock_should_black + '" height="15px" /></a>');
 				}
 			} 
 		}
@@ -280,19 +282,19 @@ $( document ).on( 'keyup', '.textA', function(e){
 		&& message.substring(0, tag.length) == tag
 		&& message.substring(message.length - tag.length, message.length) == tag){
 			//message is encrypted and formatted
-		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_encrypted.png"){
-			crypter.attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
+		if(crypter.attr("src") != icon.lock_encrypted){
+			crypter.attr("src", icon.lock_encrypted);
 		}
 	}else if($(this).parents(".fbNubFlyoutInner").find('.crypter').attr("fb_en") == 1 && message.length > 0 && getPass($(this))){
-			crypter.attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
+			crypter.attr("src", icon.lock_encrypted);
 	}else if(message.length > 0 && getPass($(this))){
-		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_should.png"){
-			crypter.attr("src","https://crypter.co.uk/icons/lock_should.png");
+		if(crypter.attr("src") != icon.lock_should){
+			crypter.attr("src", icon.lock_should);
 		}
 	}else{
 		//either no password has been set or there is no text in the text area
-		if(crypter.attr("src") != "https://crypter.co.uk/icons/lock_empty.png"){
-			crypter.attr("src","https://crypter.co.uk/icons/lock_empty.png");
+		if(crypter.attr("src") != icon.lock_empty){
+			crypter.attr("src", icon.lock_empty);
 		}
 	}
 });
@@ -371,7 +373,7 @@ $( document ).on( 'click', '.crypter', function(){
 		var messageContent = bottomBit.find(".textA").text();
 		if(messageContent.length > 0){
 			if(getIndicesOf(tag, messageContent).length < 2){
-				$(this).attr("src","https://crypter.co.uk/icons/lock_encrypted.png");
+				$(this).attr("src", icon.lock_encrypted);
 				//encrypt message
 				var encrypt = tag+CryptoJS.AES.encrypt(messageContent, getPass($(this)))+tag;
 				//replace text
@@ -406,17 +408,17 @@ $( document ).on( 'click', '.crypter', function(){
 //decrypt-lock hover animation
 $(document).on({
 	mouseenter: function () {
-		$(this).find("img").attr("src","https://crypter.co.uk/icons/lock_open.png");
+		$(this).find("img").attr("src", icon.lock_open);
 	},
 	mouseleave: function () {
-		$(this).find("img").attr("src","https://crypter.co.uk/icons/lock_should_black.png");
+		$(this).find("img").attr("src", icon.lock_should_black);
 	}
 }, ".decrypt");
 
 //encrypt-lock hover fade (emulating facebook) 
 $(document).on({
 	mouseenter: function () {
-		if($(this).attr("src") == "https://crypter.co.uk/icons/lock_empty.png"){
+		if($(this).attr("src") == icon.lock_empty){
 			$(this).animate({opacity: 0.5}, 200);
 		}
 	},
