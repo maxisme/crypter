@@ -1,12 +1,12 @@
 {
   "title": "Facebook Chat Encrypter",
   "name": "facebookchatencrypter",
-  "version": "0.0.91",
+  "version": "0.0.92",
   "description": "A native encryption tool for Facebook messenger.",
   "main": "index.js",
   "author": "Maximilian Mitchell",
   "license": "MIT",
   "keywords": [
     "jetpack"
-  ]
+  ] 
 }
