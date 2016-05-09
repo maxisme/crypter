@@ -26,7 +26,7 @@ window:	variable name:				comment:
 14		._d97						inner width is max width of message iframe 
 */
 
-console.log("Crypter has started");
+logM("Crypter has started");
 
 //dynamically acquire facebook variables, as they are likely to change in the future.
 $.getJSON("https://crypter.co.uk/ext/FBvariables.php", function( json ) {
@@ -34,7 +34,7 @@ $.getJSON("https://crypter.co.uk/ext/FBvariables.php", function( json ) {
 		window[x] = json[x];
 	}
 }).error(function(err) { 
-	console.log("error loading FBvariables :"+err);
+	logM("error loading FBvariables :"+err);
 });
 
 var tag = "--crypter.co.uk--";
@@ -148,11 +148,11 @@ function securePassAjax(id, val){
 		data: { id : id, val : val},
 		success : function(data) {
 			if(data != 1){
-				console.log("Failed to set security");
+				logM("Failed to set security");
 			}
 		}, 
 		error:function(){
-			console.log('Failed AJAX security');
+			logM('Failed AJAX security');
 		}
 	});
 }
@@ -179,10 +179,8 @@ function killCrypter(it) {
 	//recrypt all messages 
 	chat.find('.decryptIframe').each(function() {
 		var id = $(this).attr("id");
-		//remove 12ads3
-		var actualMessage = id.substring(0, id.length - 6);
-		
-		$(this).replaceWith('<a id="'+actualMessage+'" class="decrypt"><img style="position:relative; top: 3px;" src="'+lock_should_black+'" height="15px"></a>');
+		var actualID = id.substring(0, id.length - 6);
+		recrypt(actualID);
 	});
 	
 	//remove password session
@@ -197,13 +195,21 @@ function killCrypter(it) {
 		data: { id : id },
 		success : function(data) {
 			if(data != 1){
-				console.log("Error killing session pass");
+				logM("Error killing session pass");
 			}
 		},
 		error:function(){
-			console.log('Failed AJAX');
+			logM('Failed AJAX');
 		}
 	 });
+}
+
+function recrypt(id) {
+	var cleanID = cleanString(id);
+	var idOfiFrame = $("#"+cleanID+"12ads3");
+	idOfiFrame.replaceWith('<a id="'+id+'" class="decrypt"><img style="position:relative; top: 3px;" src="'+lock_should_black+'" height="15px"></a>');
+	//remove from alreadyDecrypted array
+	alreadyDecrypted.splice(alreadyDecrypted.indexOf(cleanID),1);
 }
 
 //--------- PASSWORD SESSION BOX FUNCTIONS ------------------
@@ -212,10 +218,6 @@ var popupHeight;
 //OPEN POP UP
 function showPopUp(it){
 	bb.show();
-	
-	console.log("IMPORTANT WIDTHS----------:");
-	console.log("WIDTH1:"+it.parents(window[8]).find(window[6]).width());
-	console.log("WIDTH2:"+it.parents(window[8]).outerWidth());
 	
 	//get dimensions
 	popupHeight = it.parents(window[11]).height();
@@ -271,11 +273,11 @@ function showPopUp(it){
 	$("#circleID").html('');
 	if(actualVersion){
 		if(actualVersion.trim() != currentVersion.trim()){
-			console.log("You have version "+actualVersion+" out of "+currentVersion);
+			logM("You have version "+actualVersion+" out of "+currentVersion);
 			$("#circleID").html('<span class="theCircle" style="position:relative;top:4px;cursor:pointer;display: block; border-radius: 50%; height:8px; width:8px; background-color:transparent; border: 1px solid #bc2122;" id="statusCircle">&nbsp;</span>');
 		}
 	}else{
-		console.log("ERROR no actual version!");
+		logM("ERROR no actual version!");
 	}
 	
 	$("#crypterOptions").css("display","none");
@@ -362,12 +364,12 @@ function setSub(){
 							killCrypter($("#"+idN));
 						}else{
 							clearInterval(getSessionTimeLeftInterval);
-							console.log("error fetching time left for session");
+							logM("error fetching time left for session");
 						}
 					},
 					error:function(){
 						clearInterval(getSessionTimeLeftInterval);
-						console.log('Failed AJAX sesh time');
+						logM('Failed AJAX sesh time');
 					}
 				});
 			}else{
@@ -389,7 +391,7 @@ function setSub(){
 		
 		//decrypt last clicked lock.
 		if(thisToDecrypt != null){
-			console.log("tried to decrypt");
+			logM("tried to decrypt");
 			thisToDecrypt.click();
 			thisToDecrypt = null;
 		}
@@ -521,7 +523,7 @@ $(document).on({
 //update circle functions
 $( document ).on( 'click', '#circleID', function (e) {
 	if(actualVersion != currentVersion){
-		console.log("You have version "+actualVersion+" out of "+currentVersion);
+		logM("You have version "+actualVersion+" out of "+currentVersion);
 		if(brser == "FF"){
 			$("#circleID").replaceWith('<span id="circleID"><div>_</div><span style="color:#bc2122"><strong>Crypter is not up to date! You have version '+currentVersion+'</strong></span><li>Go to: <strong>about:addons</strong></li><li>Click on the gear icon</li><li>Click Check for Updates</li></span>');
 			$("#circleID").replaceWith('<span id="circleID"><div>_</div><span style="color:#bc2122">Crypter is not up to date! You have version '+currentVersion+'</span><br>Go to <strong>about:addons</strong> then click the <strong>gear icon</strong> and click <strong>Check for Updates</strong></span>');
@@ -640,7 +642,7 @@ function setDecryptButton(parent){
 			//more than one line
 			if (!chatWidth) {
 			    chatWidth = $(this).parents(window[14]).width();
-				console.log("new chat width:"+chatWidth);
+				logM("new chat width:"+chatWidth);
             }
 			
 			var span = $(this);
@@ -672,7 +674,7 @@ function setDecryptButton(parent){
 
 function setLockInChat(it, opacity){
 	if(it.parents(window[8]).html().indexOf("tempLock") == -1){//allow only one padlock
-		console.log("No lock");
+		logM("No lock");
 		var iframe = it.parents(window[8]).find(".iFrameChat");
 		if(iframe){
 			iframe.after('<span style="position:relative;top:-3px;" class="tempLock"><img class="" src="'+lock_should_black+'" style="opacity:'+opacity+';position:relative;top:3px;height: 15px;"><span style="height:17px;border-left: 1px solid #000" class="cursorFlash">&nbsp;</span></span>');
@@ -680,10 +682,10 @@ function setLockInChat(it, opacity){
 			//remove "type a message..." div
 			it.parents(window[8]).find(window[5]).html("");
 		}else{
-			console.log("no iframe");
+			logM("no iframe");
 		}
 	}else{
-		console.log("already lock in chat");
+		logM("already lock in chat");
 	}
 }
 
@@ -691,15 +693,16 @@ setLockOnChat();
 setDecryptButton();	
 var fubAmmount, thisCrypter;
 var disableTypeAJAX = false;
+var alreadyDecrypted = [];
 $(document).ready(function() {
 	var storedHeight = 0;
 	var dfltHt, heightOfMesBody, _552hHeightStored;
 	window.addEventListener("message", function(evt) {
 		var message = evt.data;
 		if(message.substring(0,12) == "setImmediate" || evt.origin == "https://facebook.com"){ //ignore facebook events
-			////console.log(evt.origin);
+			////logM(evt.origin);
 		}else{
-			console.log(message);
+			logM(message);
 			//codes
 			var failedToDecrypt 	= "37YhBLoyB8CC5JGrVyh3EMPNsuSrco";
 			var noPasswordSet 		= "UO0s1s8Q53FVq2Y8b4T4mDYI6udEHb";
@@ -770,28 +773,33 @@ $(document).ready(function() {
 				var result = actualMessage.split('|');
 				var width = result[0];
 				var height = result[1];
-				if(!width){
-					console.log("error no width");
+				var id = cleanString(result[2]);
+				if (alreadyDecrypted.indexOf(id) == -1) { //iframe is called twice!!! leads to dimension error
+					if(!width){
+						logM("error no width");
+					}else{
+						logM("width:"+width+" height:"+height);
+					}
+					
+					var idDecrypt = $("#"+id);
+					var idOfiFrame = $("#"+id+"12ads3");
+					 
+					//replace lock with iframe message
+					if(idOfiFrame.length == 1){ //check iframe does not already exist
+						$(idOfiFrame).attr("status","done");
+						$(idDecrypt).replaceWith($(idOfiFrame));
+						$(idOfiFrame).css("visibility","visible");
+						alreadyDecrypted.push(id);
+					}else{
+						$(idOfiFrame).remove();
+					}
+					
+					//set width and height
+					$(idOfiFrame).css("width", width);
+					$(idOfiFrame).css("height", height);
 				}else{
-					console.log("width:"+width+" height:"+height);
+					logM("already decrypted");
 				}
-				
-				var idDecrypt = $("#"+cleanString(result[2]));
-				var idOfiFrame = $("#"+cleanString(result[2])+"12ads3");
-				 
-				//replace lock with iframe message
-				if(idOfiFrame.length == 1){
-					$(idOfiFrame).attr("status","done");
-					$(idDecrypt).replaceWith($(idOfiFrame));
-					$(idOfiFrame).css("visibility","visible");
-				}else{
-					$(idOfiFrame).remove();
-				}
-				
-				//set width and height
-				$(idOfiFrame).css("width", width);
-				$(idOfiFrame).css("height", height);
-				
 			}else if(substri == failedToDecrypt){	//ERROR DECRYPTING MESSAGE
 				var idDecrypt = $("#"+cleanString(actualMessage));
 				var idOfiFrame = $("#"+cleanString(actualMessage)+"12ads3");
@@ -827,10 +835,6 @@ $(document).ready(function() {
 				}
 				
 				setTimeout(function(){
-					//change _552h (box of chat)
-					//idDecrypt.parents(window[8]).find(window[1]).css("min-height","");
-					//idDecrypt.parents(window[8]).find(window[1]).css("height","auto");
-					
 					//change iframe height
 					idDecrypt.parents(window[8]).find(".iFrameChat").css("height", height);
 					idDecrypt.parents(window[8]).find(window[6]).css("height", height);
@@ -843,11 +847,7 @@ $(document).ready(function() {
 					//var titleH = idDecrypt.parents(window[9]).outerHeight();*/
 				},0);
 			}else if(substri == shouldRecrypt){		//RECEIVED DOUBLE CLICK ON IFRAME WITH MESSAGE
-				var idDecrypt = $("#"+cleanString(actualMessage));
-				var idOfiFrame = $("#"+cleanString(actualMessage)+"12ads3");
-				//console.log("RECRYPT: #"+cleanString(actualMessage));
-				
-				idOfiFrame.replaceWith('<a id="'+actualMessage+'" class="decrypt"><img style="position:relative; top: 3px;" src="'+lock_should_black+'" height="15px"></a>');
+				recrypt(actualMessage);
 			}else if(substri == isPassword){		//SET PASSWORD WITH AJAX IN IFRAME
 				//enable button
 				$("#submitCrypter").prop('disabled', false);
@@ -909,7 +909,7 @@ $(document).ready(function() {
 				elem.css('visibility', 'visible');
 			} else {
 				elem.css('visibility', 'hidden');
-			}    
+			}
 		}
     }, 500);
 	
@@ -935,7 +935,7 @@ $( document ).on( 'click', '.decrypt', function(){
 			method: "POST",
 			data: { id : id, codeID : codeID, code : code },
 			success : function(data) {
-				console.log(data);
+				logM(data);
 				var arr = data.split('|')
 				id = arr[0];
 				data = arr[1];
@@ -943,18 +943,16 @@ $( document ).on( 'click', '.decrypt', function(){
 					thisCrypter = $("#"+id).parents(window[8]).find('.crypter');
 					showPopUp(thisCrypter);
 				}else if(data.substring(0,2) == "SS"){
-					//session code
-					$("body").append('<iframe onload="this.style.background=\'\';" scrolling="no" style="background:url(\''+gif+'\') center center no-repeat; background-size: 10px 10px; position:relative; top: 2px;overflow:hidden;visibility:hidden;height:20px;max-width:'+chatWidth+'px;" status="loading" id="'+code+'12ads3" class="decryptIframe" frameBorder="0" src="https://crypter.co.uk/ext/front/getMessage.php?codeID='+codeID+'&id='+id+'">');
+					//session code 
+					$("body").append('<iframe onload="this.style.background=\'\';" scrolling="no" style="background:url(\''+gif+'\') center center no-repeat; background-size: 10px 10px; position:relative; top: 2px;overflow:hidden;visibility:hidden;width:100%;max-width:'+chatWidth+'px;" status="loading" id="'+code+'12ads3" class="decryptIframe" frameBorder="0" src="https://crypter.co.uk/ext/front/getMessage.php?codeID='+codeID+'&id='+id+'">');
 				}else{ 
-					console.log("DECRYPTION ERROR ->"+data); 
+					logM("DECRYPTION ERROR ->"+data); 
 				}
 			},
 			error:function(){
-				console.log('Failed temp code ajax');
+				logM('Failed temp code ajax');
 			}
 		 });
-	}else{
-		//console.log('#'+code+'12ads3 already exists');
 	}
 });
 
@@ -1031,7 +1029,7 @@ $( document ).on( 'keypress', '#pass1', function (e) {
 var entered = false;
 document.addEventListener('keydown', function(evt){
 	var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-	//console.log("facebook key:"+evt.keyCode);
+	//logM("facebook key:"+evt.keyCode);
 	
 	if(disableTypeAJAX){
 		evt.stopPropagation();
@@ -1218,3 +1216,7 @@ jQuery.extend( jQuery.easing,
         return jQuery.easing.easeOutBounce (x, t*2-d, 0, c, d) * .5 + c*.5 + b;
     }
 });
+
+function logM(str){
+	console.log(str);
+}

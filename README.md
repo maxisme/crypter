@@ -1,6 +1,7 @@
 # Crypter
 This extension locally encrypts and decrypts your Facebook messages using AES encryption along with a preset password. 
 -----
+##About
 
 Crypter ([crypter.co.uk](https://crypter.co.uk)) is an extension for Google Chrome and Mozilla Firefox. It allows users to send encrypted messages using the well-established messaging service Facebook messenger. It was designed and created by University of Sussex Computer Science student Max Mitchell (max@maxis.me).
 
@@ -17,3 +18,7 @@ In times where it’s of concern that social media companies sell your data to a
 It’s human nature to want privacy. In light of Edward Snowden’s Global Surveillance disclosures, people don’t want their messages stored and analysed regardless of whether their topic of discussion is illegal. Crypter can put millions of people at ease.
 
 Crypter solves the issue of getting unwanted hands on your Facebook messenger data, and we believe this to be incredibly important in 2016 where Internet privacy is at the forefront of debate. It’s a current, global issue affecting 1.55 billion people worldwide. Having an unobtrusive application like Crypter emerge into the market now would immensely aid efforts to increase Internet autonomy.
+
+##Function
+
+Crypter 2.0 is built completely differently to the origanl. Crypter originally was completely client side which actually deemed it pretty uselus as since then we learnt that facebook are monitoring your everykey press. Now crypter works with iFrames which link to the website. 
