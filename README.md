@@ -8,6 +8,7 @@ Crypter 2.0 is built differently to the original. Crypter was originally client 
 
 ####Extra Security
 Extra security is a new function added to Crypter within the settings panel. When activated it is next to impossible to work out the password to the conversation as everything is now done server side. It will also re-encrypt all the messages after 1 minute of no activity.
+
 -----
 
 ##About
