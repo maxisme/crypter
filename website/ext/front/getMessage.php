@@ -38,6 +38,12 @@ $pass = accessSession($id);
 
 //turn domains into links
 function linkify(inputText) {
+	//get ✖.cf links
+	if (inputText.indexOf('✖.cf') > -1) {
+		var regex = new RegExp('✖.cf\/[a-zA-Z0-9]{3,}');
+		var url = inputText.match(regex);
+		inputText = inputText.replace(regex, '<a target="_blank" href="http://'+url+'">'+url+'</a>');
+	}
 	return anchorme.js(inputText,{"target":"_blank"});
 }
 

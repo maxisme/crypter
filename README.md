@@ -20,5 +20,8 @@ It’s human nature to want privacy. In light of Edward Snowden’s Global Surve
 Crypter solves the issue of getting unwanted hands on your Facebook messenger data, and we believe this to be incredibly important in 2016 where Internet privacy is at the forefront of debate. It’s a current, global issue affecting 1.55 billion people worldwide. Having an unobtrusive application like Crypter emerge into the market now would immensely aid efforts to increase Internet autonomy.
 
 ##Function
+###Overview
+Crypter 2.0 is built differently to the original. Crypter was originally client side which actually deemed it pretty useless, because we have since learnt that Facebook are [monitoring your every key-press](http://www.wired.co.uk/news/archive/2013-12/17/facebook-is-tracking-what-you-dont-do) which means that Facebook could monitor what the user was typing before the user had even encrypted and sent a message. Now Crypter works with iFrames from our [website](https://github.com/maxisme/crypter/tree/crypter-2.0/website/ext), this ensures that Facebook cannot see what you are typing due to the Cross Domain policy. Crypter applies iFrames to the password box the chat box and also to both incoming and outgoing messages to prevent unwanted eyes at any point. Unfortunately this means that every time there is a new message Crypter has to load a whole new webpage which causes a slight loading lag.
 
-Crypter 2.0 is built completely differently to the origanl. Crypter originally was completely client side which actually deemed it pretty uselus as since then we learnt that facebook are monitoring your everykey press. Now crypter works with iFrames which link to the website. 
+###Extra Security
+Extra security is a new function added to Crypter within the settings panel. When activated it is next to impossible to work out the password to the conversation as everything is now done server side. It will also re-encrypt all the messages after 1 minute of no activity.
