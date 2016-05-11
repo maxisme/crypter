@@ -53,6 +53,7 @@ var encryptedMessage 	= "QLD97dkv5ZUGHn6IcYNyO0r7rQE2mG";
 var messageDivHeight 	= "0NArJMm57fmJdCwLeYQ2oxgqDrKjrL";
 var pressedEnter 		= "vLmKIRXqXPOhw0qvf0iCqgN4LLFeBB";
 var noPassword 			= "smIgy5LDDIwfgamCriz190JviCaBA1";
+var encrypting 			= false;
 	
 //height
 var observe;
@@ -78,9 +79,11 @@ function init() {
 			if (storeH2 != storeH) {
 				postM(messageDivHeight+"|<?php echo $id?>|"+storeH);
 				storeH2 = storeH;
+			}else{
+				postM(messageDivHeight+"|<?php echo $id?>|"+storeH2);
 			}
 		}
-	}
+	} 
 	
 	function delayedResize() {
 		window.setTimeout(resize, 0);
@@ -102,6 +105,7 @@ function postM(message){
 }
 
 function encrypt(text){
+	encrypting = true;
 	<?php
 	if($_GET['in'] == "1" && $_SESSION[$id.'SECURE'] != 1){?>
 		//LOCAL ENCRYPTION
@@ -131,11 +135,11 @@ function tellFB(crypted){
 	var el = document.getElementById("crypterTextArea");
 	if(crypted != 1){
 		postM(encryptedMessage+"|<?php echo $id?>|"+tag+crypted+tag);
-		$(el).val('');
 	}else{
 		postM(noPassword);
 	}
 	$(el).focus();
+	encrypting = false;
 }
 
 $(document).ready(function(e) {
@@ -156,8 +160,13 @@ $(document).ready(function(e) {
 	el.onkeydown = function(evt) {
 		evt = evt || window.event;
 		var text = $(el).val().trim(); 
-		if(evt.keyCode == 13){
+		if(evt.keyCode == 13 && !encrypting){
+			if(!evt.shiftKey){
+				$(el).val('');
+			}
 			if(text.length == 0){
+				evt.stopPropagation();
+				evt.preventDefault();
 				return false;
 			}else if(!evt.shiftKey){
 				if(text.length > 0){ 

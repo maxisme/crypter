@@ -564,7 +564,6 @@ $("#popup").html('<style>#contentForPass{overflow:hidden;}'
 
 +'<span style="display:none; font-size:10px;position:relative;top:3px;" id="crypterOptions">'
 	+'<span class="settingTitle slide"><strong>Crypter</strong></span> <div class="onoffswitch slide"> <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="crypterOn" checked> <label class="onoffswitch-label" for="crypterOn"></label> </div> <span class="settingTitle slide">Auto-Decrypt</span> <div class="onoffswitch slide"> <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="autoDecrypt" checked> <label class="onoffswitch-label" for="autoDecrypt"></label> </div> <span class="settingTitle slide">Extra Security</span> <div class="onoffswitch slide"> <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="addSecurity" checked> <label class="onoffswitch-label" for="addSecurity"></label> </div>'
-	//+'<span style="font-size:8px">*: Doesn\'t store passwords on the client - Takes longer to encrypt message but adds security.<br>**:Decrypts messages and returns content through Crypter - This takes longer to decrypt messages but prevents potential facebook bots from reading messages</span>'
 +'</span>' 
 +'<span id="restOfOptions">'
 	+'<br></form><button id="submitCrypter" disabled> Set </button><br><br><span id="showExtra"><a href="mailto:hello@crypter.co.uk?subject=I have found a bug!">Report Bug</a> | <a target="_blank" href="https://crypter.co.uk">Crypter</a> | <a target="_blank" href="https://pulverize.xyz?crypter">Share A Self Destructing Password</a> | <a id=\'reviewUs\' target=\'_blank\' href=\''+reviewLink+'\'>Review Us</a><br><span style=\'cursor:pointer;\' id="circleID"></span></span></span></span>'
@@ -919,43 +918,69 @@ $(document).ready(function() {
 //-------------- ACTIONS -----------
 
 var incrementer = 0;
+var decryptCount = 0; //only allows 5 sim
 $( document ).on( 'click', '.decrypt', function(){
-	thisToDecrypt = $(this);
-	var codeID = getID($(this)) + incrementer++; //id of chat
-	var id = getID($(this));
-	$(this).find("img").attr("src",gif);
-	var code = $(this).attr("id"); //code of message
-	
-	if($('#'+cleanString(code)+'12ads3').length == 0){ //make sure iframe is not already loading
-		$.ajax({
-			url : "https://crypter.co.uk/ext/front/storeCode.php",
-			xhrFields : {
-			  withCredentials : true
-			},
-			crossDomain: true,
-			method: "POST",
-			data: { id : id, codeID : codeID, code : code },
-			success : function(data) {
-				logM(data);
-				var arr = data.split('|')
-				id = arr[0];
-				data = arr[1];
-				if(data.substring(0,2) == "NP"){
-					thisCrypter = $("#"+id).parents(window[8]).find('.crypter');
-					showPopUp(thisCrypter);
-				}else if(data.substring(0,2) == "SS"){
-					//session code 
-					$("body").append('<iframe onload="this.style.background=\'\';" scrolling="no" style="background:url(\''+gif+'\') center center no-repeat; background-size: 10px 10px; position:relative; top: 2px;overflow:hidden;visibility:hidden;width:100%;max-width:'+chatWidth+'px;" status="loading" id="'+code+'12ads3" class="decryptIframe" frameBorder="0" src="https://crypter.co.uk/ext/front/getMessage.php?codeID='+codeID+'&id='+id+'">');
-				}else{ 
-					logM("DECRYPTION ERROR ->"+data); 
+	if (decryptCount < 5) {
+        decryptCount++;
+		console.log("decrypting:"+decryptCount);
+		thisToDecrypt = $(this);
+		var codeID = getID($(this)) + incrementer++; //id of chat
+		var id = getID($(this));
+		$(this).find("img").attr("src",gif);
+		var code = $(this).attr("id"); //code of message
+		
+		if($('#'+cleanString(code)+'12ads3').length == 0){ //make sure iframe is not already loading
+			$.ajax({
+				url : "https://crypter.co.uk/ext/front/storeCode.php",
+				xhrFields : {
+				  withCredentials : true
+				},
+				crossDomain: true,
+				method: "POST",
+				data: { id : id, codeID : codeID, code : code },
+				success : function(data) {
+					logM(data);
+					var arr = data.split('|')
+					id = arr[0];
+					data = arr[1];
+					if(data.substring(0,2) == "NP"){
+						thisCrypter = $("#"+id).parents(window[8]).find('.crypter');
+						showPopUp(thisCrypter);
+					}else if(data.substring(0,2) == "SS"){
+						//session code 
+						$("body").append('<iframe onload="this.style.background=\'\';" scrolling="no" style="background:url(\''+gif+'\') center center no-repeat; background-size: 10px 10px; position:relative; top: 2px;overflow:hidden;visibility:hidden;width:100%;max-width:'+chatWidth+'px;" status="loading" id="'+code+'12ads3" class="decryptIframe" frameBorder="0" src="https://crypter.co.uk/ext/front/getMessage.php?codeID='+codeID+'&id='+id+'">');
+					}else{ 
+						logM("DECRYPTION ERROR ->"+data); 
+					}
+					decryptCount--;
+				},
+				error:function(){
+					logM('Failed temp code ajax');
+					decryptCount--;
 				}
-			},
-			error:function(){
-				logM('Failed temp code ajax');
-			}
-		 });
+			 });
+		}else{
+			//already decrypting
+			console.log("already decrypting:"+id);
+			
+			//remove from alreadyDecrypted array
+			alreadyDecrypted.splice(alreadyDecrypted.indexOf(code),1);
+			
+			checkDecryptedIframes();
+			decryptCount--;
+		}
+    }else{
+		logM("decrypting overload"+decryptCount);
 	}
 });
+
+function checkDecryptedIframes() {
+    $("iframe").each(function(){
+		if ($(this).attr("status") == "loading") {
+            $(this).attr("src", $(this).attr("src"));
+        }
+	});
+}
 
 $( document ).on( 'click', '.crypter', function(evt){
 	thisToDecrypt = null;

@@ -102,6 +102,7 @@ $(document).ready(function() {
 		$("input").keyup(function(){
 			var content = $("#pass1").val();
 			if(content.length > 0){
+				parent.postMessage(noPassword,"https://www.facebook.com");
 				$.ajax({
 					type: "POST",
 					xhrFields : {
