@@ -1,5 +1,4 @@
 <?php
-//sets secure session for password
 include '../backend/functions/sessionAuth.php';
 include '../backend/functions/referer.php';
 

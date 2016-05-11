@@ -1,6 +1,4 @@
 <?php
-//sets session password
-
 include 'functions/sessionAuth.php';
 
 $password = htmlspecialchars(trim($_POST['token']));

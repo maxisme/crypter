@@ -796,6 +796,7 @@ $(document).ready(function() {
 					
 					//set width and height
 					$(idOfiFrame).css("width", width);
+					$(idOfiFrame).css("max-width", chatWidth);
 					$(idOfiFrame).css("height", height);
 				}else{
 					logM("already decrypted");

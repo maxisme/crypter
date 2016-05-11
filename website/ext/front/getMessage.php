@@ -50,23 +50,25 @@ $(document).ready(function(e) {
 	var shouldRecrypt = "sQITRDUdH9QeBalmb6WZbI6NWdvkhw";
 	var failedToDecrypt = "37YhBLoyB8CC5JGrVyh3EMPNsuSrco";
 	
-	var el = document.getElementById("message");
+	var el =$("span");
 	var contents = linkify("<?php echo preg_replace( "/\r|\n/", "", nl2br(htmlspecialchars(decrypt($code, $pass))))?>");
 	
 	if(contents.length > 0){
 		//get message
-		$('#message').html(contents);
+		el.html(contents);
 		
-		var width = $('#message').width();
-		var height = $('#message').height();
+		var width = el.width();
+		var height = el.height();
+		
+		console.log(width+"|"+height);
 		
 		//post encrypted message to facebook
-		postM(didDecrypt+$('#message').width()+"|"+$('#message').height()+"|<?php echo $code?>");
+		postM(didDecrypt+el.width()+"|"+el.height()+"|<?php echo $code?>");
 		
 		//double click recrypt
 		$("body").dblclick(function(e) {
 			postM(shouldRecrypt+"<?php echo $code?>");
-			console.log("6");
+			console.log("6"); 
 		});
 	}else{
 		postM(failedToDecrypt+"<?php echo $code?>");
@@ -75,7 +77,7 @@ $(document).ready(function(e) {
 });
 </script>
 
-<span style="max-width:100%" id="message">
+<span>
 </span>
 
 </html>

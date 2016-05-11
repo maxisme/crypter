@@ -1,6 +1,4 @@
 <?php
-//returns time left of secure session
-
 session_start();
 include '../backend/functions/referer.php';
 

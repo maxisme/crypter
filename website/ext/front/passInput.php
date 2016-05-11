@@ -1,5 +1,4 @@
 <?php
-//input password HTML
 include '../backend/functions/sessionAuth.php';
 include '../backend/functions/referer.php';
 
@@ -11,7 +10,6 @@ if(!fromFB()){
 
 $id = trim($_GET['id']);
 
-//only store password in input if not in secure mode
 if($_SESSION[$id.'SECURE'] != 1){
 	$pass = accessSession($id);
 }
@@ -67,7 +65,7 @@ function setStrengthIndicator(){
 	var passwordVal = $("#pass1").val();
 	var strength = passwordStrength(passwordVal);
 	var length = passwordVal.length;
-	
+	//console.log("strength:"+strength+"length:"+length);
 	if(strength > 4 ){
 		//good password
 		$("#pass1").css("border-color","#4adf94");
@@ -121,7 +119,7 @@ $(document).ready(function() {
 					}
 				});
 			}else{
-				//no password in input
+				//no password set
 				parent.postMessage(noPassword,"https://www.facebook.com");
 			}
 		});  

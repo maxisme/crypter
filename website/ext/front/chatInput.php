@@ -13,7 +13,7 @@ if(!fromFB()){
 $id = trim($_GET['id']);
 ?>
 <script src="../scripts/jquery.min.js"></script>
-<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="../scripts/aes.js"></script>
 <script src="../scripts/aes.class.js"></script> 
 <script src="../scripts/aes-json-format.js"></script> 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml">
@@ -102,7 +102,6 @@ function postM(message){
 }
 
 function encrypt(text){
-	<!-- <?php echo $_GET['in']; ?> -->
 	<?php
 	if($_GET['in'] == "1" && $_SESSION[$id.'SECURE'] != 1){?>
 		//LOCAL ENCRYPTION
@@ -124,7 +123,7 @@ function encrypt(text){
 				console.log('Error with server encryption');
 			}
 		});
-	<?php
+	<?php 
 	}?>
 }
 
@@ -149,7 +148,6 @@ $(document).ready(function(e) {
 	el.onchange = function(evt){
 		evt = evt || window.event;
 		var text = $(el).val().trim(); 
-		console.log(evt.keyCode);
 		if(text.length == 0){
 			el.focus();
 		}
@@ -158,13 +156,11 @@ $(document).ready(function(e) {
 	el.onkeydown = function(evt) {
 		evt = evt || window.event;
 		var text = $(el).val().trim(); 
-		console.log(evt.keyCode);
 		if(evt.keyCode == 13){
 			if(text.length == 0){
 				return false;
 			}else if(!evt.shiftKey){
 				if(text.length > 0){ 
-					console.log("pressed enter");
 					postM(pressedEnter+"<?php echo $id?>");
 					encrypt(text);
 				}

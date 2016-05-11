@@ -1,7 +1,6 @@
 <?php
-//kills session password
-
 session_start();
+
 include '../backend/functions/referer.php';
 
 if(!fromFB()){
