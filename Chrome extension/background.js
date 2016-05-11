@@ -567,7 +567,7 @@ $("#popup").html('<style>#contentForPass{overflow:hidden;}'
 	//+'<span style="font-size:8px">*: Doesn\'t store passwords on the client - Takes longer to encrypt message but adds security.<br>**:Decrypts messages and returns content through Crypter - This takes longer to decrypt messages but prevents potential facebook bots from reading messages</span>'
 +'</span>'
 +'<span id="restOfOptions">'
-	+'<br></form><button id="submitCrypter" disabled> Set </button><br><br><span id="showExtra"><a href="mailto:hello@crypter.co.uk?subject=I have found a bug!">Report Bug</a> | <a target="_blank" href="https://crypter.co.uk">Crypter</a> | <a target="_blank" href="http://⊗.cf?crypter">Share A Self Destructing Password</a> | <a id=\'reviewUs\' target=\'_blank\' href=\''+reviewLink+'\'>Review Us</a><br><span style=\'cursor:pointer;\' id="circleID"></span></span></span></span>'
+	+'<br></form><button id="submitCrypter" disabled> Set </button><br><br><span id="showExtra"><a href="mailto:hello@crypter.co.uk?subject=I have found a bug!">Report Bug</a> | <a target="_blank" href="https://crypter.co.uk">Crypter</a> | <a target="_blank" href="https://pulverize.xyz?crypter">Share A Self Destructing Password</a> | <a id=\'reviewUs\' target=\'_blank\' href=\''+reviewLink+'\'>Review Us</a><br><span style=\'cursor:pointer;\' id="circleID"></span></span></span></span>'
 +'</span>'
 );
 

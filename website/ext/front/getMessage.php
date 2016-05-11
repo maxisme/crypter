@@ -68,7 +68,7 @@ $(document).ready(function(e) {
 		//double click recrypt
 		$("body").dblclick(function(e) {
 			postM(shouldRecrypt+"<?php echo $code?>");
-			console.log("6"); 
+			console.log("6");
 		});
 	}else{
 		postM(failedToDecrypt+"<?php echo $code?>");

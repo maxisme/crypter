@@ -1,6 +1,5 @@
 <?php 
 //stores encrypted code in session so as not passed through $_GET
-
 include '../backend/functions/sessionAuth.php';
 include '../backend/functions/referer.php';
 
@@ -15,10 +14,8 @@ if(!fromFB()){
 }
 
 //allows facebook to handle sessions on crypter
-//if (isset($_SERVER['HTTP_ORIGIN'])) {
-	header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-	header('Access-Control-Allow-Credentials: true');
-//}
+header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+header('Access-Control-Allow-Credentials: true');
  
 $id = trim($_POST['id']);
 $codeID = trim($_POST['codeID']);

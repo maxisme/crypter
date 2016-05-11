@@ -16,7 +16,6 @@ $id = trim($_POST['id']);
 
 if($_SESSION[$id.'SECURE'] == 1 && !empty($id)){
 	echo $id."|";
-	//not using access() as then would never expire.
 	if($_SESSION[$id.'EXPIRES'] >= time()){
 		echo $_SESSION[$id.'EXPIRES'] - time();
 	}else{ 

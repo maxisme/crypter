@@ -70,10 +70,10 @@ function setStrengthIndicator(){
 		//good password
 		$("#pass1").css("border-color","#4adf94");
 	}else if(strength > 2){
-		//allright password
+		//average password
 		$("#pass1").css("border-color","#FECEAB");
 	}else if(strength > 1){
-		//allright password
+		//below average password
 		$("#pass1").css("border-color","#FF847C");
 	}else if(length > 0){
 		//shocking password
@@ -112,7 +112,6 @@ $(document).ready(function() {
 					success: function(data){
 						if(data != 1){
 							parent.postMessage(noPassword,"https://www.facebook.com");
-							alert("ERROR #2: "+data);
 						}else{
 							parent.postMessage(isPassword,"https://www.facebook.com");
 						}
@@ -128,7 +127,7 @@ $(document).ready(function() {
 		});
 		
 		document.getElementById("pass1").onkeydown = function(evt) { 
-			if(evt.keyCode == 13){
+			if(evt.keyCode == 13){ 
 				parent.postMessage(didPressEnterPass,"https://www.facebook.com"); 
 			}
 		}
